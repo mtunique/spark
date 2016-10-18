@@ -39,7 +39,7 @@ import scala.util.Try
 import scala.util.control.{ControlThrowable, NonFatal}
 
 import com.google.common.io.{ByteStreams, Files => GFiles}
-import com.google.common.net.InetAddresses
+import com.google.common.net.{HostAndPort, InetAddresses}
 import org.apache.commons.lang3.SystemUtils
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.{FileSystem, FileUtil, Path}
@@ -924,11 +924,11 @@ private[spark] object Utils extends Logging {
   }
 
   def checkHost(host: String, message: String = "") {
-    assert(host.indexOf(':') == -1, message)
+    assert(!HostAndPort.fromString(host).hasPort, message)
   }
 
   def checkHostPort(hostPort: String, message: String = "") {
-    assert(hostPort.indexOf(':') != -1, message)
+    assert(HostAndPort.fromString(hostPort).hasPort, message)
   }
 
   // Typically, this will be of order of number of nodes in cluster
